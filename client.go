@@ -2,6 +2,7 @@
 package gonduit
 
 import (
+	"context"
 	"crypto/sha1"
 	"fmt"
 	"io"
@@ -39,12 +40,18 @@ func getAuthSignature(authToken, cert string) string {
 // Connect calls conduit.connect to open an authenticated session for future
 // requests.
 func (c *Conn) Connect() error {
+	return c.ConnectContext(context.Background())
+}
+
+// ConnectContext calls conduit.connect to open an authenticated session for future
+// requests, passing through the given context.
+func (c *Conn) ConnectContext(ctx context.Context) error {
 	authToken := getAuthToken()
 	authSig := getAuthSignature(authToken, c.options.Cert)
 
 	var resp responses.ConduitConnectResponse
 
-	if err := c.Call("conduit.connect", &requests.ConduitConnectRequest{
+	if err := c.CallContext(ctx, "conduit.connect", &requests.ConduitConnectRequest{
 		Client:            c.dialer.ClientName,
 		ClientVersion:     c.dialer.ClientVersion,
 		ClientDescription: c.dialer.ClientDescription,
@@ -76,7 +83,24 @@ func (c *Conn) Call(
 	params interface{},
 	result interface{},
 ) error {
-	return core.PerformCall(
+	ctx := context.Background()
+	return c.CallContext(ctx, method, params, result)
+}
+
+// CallContext allows you to make a raw conduit method call with the given context.
+// Params will be marshalled as JSON and the result JSON will be unmarshalled into
+// the result interface{}.
+//
+// This is primarily useful for calling conduit endpoints that aren't
+// specifically supported by other methods in this package.
+func (c *Conn) CallContext(
+	ctx context.Context,
+	method string,
+	params interface{},
+	result interface{},
+) error {
+	return core.PerformCallContext(
+		ctx,
 		core.GetEndpointURI(c.host, method),
 		params,
 		&result,
