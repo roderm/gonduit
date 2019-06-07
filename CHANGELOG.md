@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] - 2019-06-07
+### Added
+- Added support for `maniphest.search` endpoint.
+
 ## [0.3.2] - 2019-01-31
 ### Fixed
 - Return `ConduitError` with proper status code when Phabricator fails with
