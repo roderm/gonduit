@@ -12,18 +12,26 @@ const (
 	DifferentialQueryHGCommit DifferentialQueryCommitHashType = "hgcm"
 )
 
-// DifferentialStatus is the status of a differential revision.
-type DifferentialStatus string
+// DifferentialStatusLegacy is the status of a differential revision.
+type DifferentialStatusLegacy int
 
 const (
-	// DifferentialStatusAny is any status.
-	DifferentialStatusAny DifferentialStatus = "status-any"
-	// DifferentialStatusOpen is any revision that is open.
-	DifferentialStatusOpen DifferentialStatus = "status-open"
-	// DifferentialStatusAccepted is any revision that is accepted.
-	DifferentialStatusAccepted DifferentialStatus = "status-accepted"
-	// DifferentialStatusClosed is any revision that is closed.
-	DifferentialStatusClosed DifferentialStatus = "status-closed"
+	// DifferentialStatusLegacyNeedsReview is needs-review status.
+	DifferentialStatusLegacyNeedsReview DifferentialStatusLegacy = 0
+	// DifferentialStatusLegacyNeedsRevision is needs-revision status.
+	DifferentialStatusLegacyNeedsRevision DifferentialStatusLegacy = 1
+	// DifferentialStatusLegacyAccepted is accepted status.
+	DifferentialStatusLegacyAccepted DifferentialStatusLegacy = 2
+	// DifferentialStatusLegacyPublished is published (aka "closed") status.
+	DifferentialStatusLegacyPublished DifferentialStatusLegacy = 3
+	// DifferentialStatusLegacyAbandoned is abandoned status.
+	DifferentialStatusLegacyAbandoned DifferentialStatusLegacy = 4
+	// DifferentialStatusLegacyChangesPlanned is changes-planned status.
+	DifferentialStatusLegacyChangesPlanned DifferentialStatusLegacy = 5
+	// DifferentialStatusLegacyDraft is draft status. Value is the same as
+	// for "needs-review" status because there were no legacy value for this
+	// type.
+	DifferentialStatusLegacyDraft DifferentialStatusLegacy = 0
 )
 
 // DifferentialQueryOrder is the order in which query results cna be ordered.
