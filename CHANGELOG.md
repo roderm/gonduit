@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2019-07-12
+### Added
+- Support for differential.querydiffs.
+- Timeout field to code.ClientOptions.
+- DifferentialStatusLegacy with int representations of statuses.
+- Client interface to pass own http.Client instance.
+- Introduced basic context.Context compatability.
+
+### Changed
+- Changed fields on entities.DifferentialRevision to match actual response
+  returned from Phabricator. This is breaking change.
+
+### Removed
+- DifferentialStatus struct as it is not used anymore.
+
 ## [0.3.3] - 2019-06-07
 ### Added
 - Added support for `maniphest.search` endpoint.
