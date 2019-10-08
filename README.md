@@ -116,6 +116,7 @@ for more information on how to use them.
 - conduit.connect
 - conduit.query
 - differential.query
+- differential.getcommitpaths
 - diffusion.querycommit
 - file.download
 - macro.creatememe
