@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2019-10-14
+### Added
+- Support for differential.getcommitmessage.
+
 ## [0.4.1] - 2019-10-08
 ### Added
 - Support for differential.getcommitpaths.
