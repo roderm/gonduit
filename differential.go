@@ -46,3 +46,20 @@ func (c *Conn) DifferentialGetCommitPaths(
 
 	return &res, nil
 }
+
+// DifferentialGetCommitMessageMethod is method name on Phabricator API.
+const DifferentialGetCommitMessageMethod = "differential.getcommitmessage"
+
+// DifferentialGetCommitMessage performs a call to differential.getcommitmessage.
+func (c *Conn) DifferentialGetCommitMessage(
+	req requests.DifferentialGetCommitMessageRequest,
+) (*responses.DifferentialGetCommitMessageResponse, error) {
+	var res responses.DifferentialGetCommitMessageResponse
+
+	if err := c.Call(
+		DifferentialGetCommitMessageMethod, &req, &res); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}

@@ -43,3 +43,19 @@ const (
 	// DifferentialQueryOrderCreated orders results by date created.
 	DifferentialQueryOrderCreated DifferentialQueryOrder = "order-created"
 )
+
+// DifferentialGetCommitMessageEditType is value of edit type field.
+type DifferentialGetCommitMessageEditType string
+
+const (
+	// DifferentialGetCommitMessageEdit mode hides read-only fields.
+	DifferentialGetCommitMessageEdit DifferentialGetCommitMessageEditType = "edit"
+
+	// DifferentialGetCommitMessageCreate mode hides read-only fields. "Field:"
+	// templates are shown for some fields even if they are empty.
+	DifferentialGetCommitMessageCreate DifferentialGetCommitMessageEditType = "create"
+
+	// DifferentialGetCommitMessageRead shows all fields including read-only.
+	// Value is empty string on purpose.
+	DifferentialGetCommitMessageRead DifferentialGetCommitMessageEditType = ""
+)
