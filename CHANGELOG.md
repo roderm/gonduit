@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2019-11-26
+### Changed
+- `DifferentialRevision.Reviewers` now points not to map but
+  `DifferentialRevisionReviewers` struct (which is map also).
+
+### Fixed
+- `differential.query` method does not fail anymore if revision has no
+  reviewers.
+
 ## [0.5.0] - 2019-10-14
 ### Added
 - Support for differential.getcommitmessage.
