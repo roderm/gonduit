@@ -1,7 +1,11 @@
 package entities
 
-import "github.com/uber/gonduit/constants"
-import "github.com/uber/gonduit/util"
+import (
+	"encoding/json"
+
+	"github.com/uber/gonduit/constants"
+	"github.com/uber/gonduit/util"
+)
 
 // DifferentialRevision represents a revision in Differential.
 type DifferentialRevision struct {
@@ -21,11 +25,39 @@ type DifferentialRevision struct {
 	ActiveDiffPHID string                             `json:"activeDiffPHID"`
 	Diffs          []string                           `json:"diffs"`
 	Commits        []string                           `json:"commits"`
-	Reviewers      map[string]string                  `json:"reviewers"`
+	Reviewers      DifferentialRevisionReviewers      `json:"reviewers"`
 	CCs            []string                           `json:"ccs"`
 	Hashes         [][]string                         `json:"hashes"`
 	Auxiliary      map[string]interface{}             `json:"auxiliary"`
 	RepositoryPHID string                             `json:"repositoryPHID"`
+}
+
+// DifferentialRevisionReviewers holds a list of reviewers of differential
+// revision.
+type DifferentialRevisionReviewers map[string]string
+
+// UnmarshalJSON ensures result of unmarshaling always is map[string]string
+// despite if reviewers field in JSON holds a map (when reviewers exist) or
+// empty slice (when there are no reviewers).
+func (r *DifferentialRevisionReviewers) UnmarshalJSON(b []byte) error {
+	var res map[string]string
+	err := json.Unmarshal(b, &res)
+	if err == nil {
+		*r = make(DifferentialRevisionReviewers)
+		for k, v := range res {
+			(*r)[k] = v
+		}
+		return nil
+	}
+
+	// Try unmarshal to empty slice (such response is provided by Phabricator
+	// when there are no reviewers).
+	var empty []string
+	err = json.Unmarshal(b, &empty)
+	if err == nil {
+		return nil
+	}
+	return err
 }
 
 // DifferentialDiff represents a specific diff within a Differential revision.
