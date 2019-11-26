@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2019-11-26
+- Dummy release
+
 ## [0.6.0] - 2019-11-26
 ### Changed
 - `DifferentialRevision.Reviewers` now points not to map but
