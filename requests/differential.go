@@ -2,6 +2,15 @@ package requests
 
 import "github.com/uber/gonduit/constants"
 
+// DifferentialGetCommitMessageRequest represents a request to the
+// differential.getcommitmessage call.
+type DifferentialGetCommitMessageRequest struct {
+	RevisionID uint64                                         `json:"revision_id"`
+	Fields     []string                                       `json:"fields"`
+	Edit       constants.DifferentialGetCommitMessageEditType `json:"edit"`
+	Request
+}
+
 // DifferentialQueryRequest represents a request to the
 // differential.query call.
 type DifferentialQueryRequest struct {
@@ -19,5 +28,20 @@ type DifferentialQueryRequest struct {
 	Subscribers      []string                           `json:"subscribers"`
 	ResponsibleUsers []string                           `json:"responsibleUsers"`
 	Branches         []string                           `json:"branches"`
+	Request
+}
+
+// DifferentialQueryDiffsRequest represents a request
+// to the differential.querydiffs call.
+type DifferentialQueryDiffsRequest struct {
+	IDs         []uint64 `json:"ids"`
+	RevisionIDs []uint64 `json:"revisionIDs"`
+	Request
+}
+
+// DifferentialGetCommitPathsRequest represents a request to the
+// differential.getcommitpaths call.
+type DifferentialGetCommitPathsRequest struct {
+	RevisionID uint64 `json:"revision_id"`
 	Request
 }

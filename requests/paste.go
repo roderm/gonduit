@@ -1,5 +1,13 @@
 package requests
 
+// PasteCreateRequest represents a request to paste.create.
+type PasteCreateRequest struct {
+	Content  string `json:"content"`  // required
+	Title    string `json:"title"`    // optional
+	Language string `json:"language"` // optional
+	Request
+}
+
 // PasteQueryRequest represents a request to paste.query.
 type PasteQueryRequest struct {
 	IDs         []uint64 `json:"ids"`         // optional

@@ -4,9 +4,45 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/uber/gonduit/constants"
 	"github.com/uber/gonduit/entities"
 	"github.com/uber/gonduit/util"
 )
+
+// ManiphestQueryRequest represents a request to maniphest.query.
+type ManiphestQueryRequest struct {
+	IDs          []string                      `json:"ids"`
+	PHIDs        []string                      `json:"phids"`
+	OwnerPHIDs   []string                      `json:"ownerPHIDs"`
+	AuthorPHIDs  []string                      `json:"authorPHIDs"`
+	ProjectPHIDs []string                      `json:"projectPHIDs"`
+	CCPHIDs      []string                      `json:"ccPHIDs"`
+	FullText     string                        `json:"fullText"`
+	Status       constants.ManiphestTaskStatus `json:"status"`
+	Order        constants.ManiphestQueryOrder `json:"order"`
+	Limit        uint64                        `json:"limit"`
+	Offset       uint64                        `json:"offset"`
+	Request
+}
+
+// ManiphestCreateTaskRequest represents a request to maniphest.createtask.
+type ManiphestCreateTaskRequest struct {
+	Title        string   `json:"title"`
+	Description  string   `json:"description"`
+	OwnerPHID    string   `json:"ownerPHID"`
+	ViewPolicy   string   `json:"viewPolicy"`
+	EditPolicy   string   `json:"editPolicy"`
+	CCPHIDs      []string `json:"ccPHIDs"`
+	Priority     int      `json:"priority"`
+	ProjectPHIDs []string `json:"projectPHIDs"`
+	Request
+}
+
+// ManiphestGetTaskTransactions represents a request to maniphest.gettasktransactions.
+type ManiphestGetTaskTransactions struct {
+	IDs []string `json:"ids"`
+	Request
+}
 
 // ManiphestSearchRequest represents a request to maniphest.search API method.
 type ManiphestSearchRequest struct {
