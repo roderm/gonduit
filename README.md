@@ -115,15 +115,17 @@ for more information on how to use them.
 
 - conduit.connect
 - conduit.query
-- differential.query
-- differential.getcommitpaths
 - differential.getcommitmessage
+- differential.getcommitpaths
+- differential.query
+- differential.revision.search
 - diffusion.querycommit
 - file.download
 - macro.creatememe
-- maniphest.query
 - maniphest.createtask
 - maniphest.gettasktransactions
+- maniphest.query
+- maniphest.search
 - paste.create
 - paste.query
 - phid.lookup

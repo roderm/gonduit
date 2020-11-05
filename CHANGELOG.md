@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2020-11-05
+### Added
+- Support for `differential.revision.search` endpoint.
+
+### Changed
+- Migrated from Glide to go modules.
+
 ## [0.6.1] - 2019-11-26
 - Dummy release
 
