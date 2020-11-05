@@ -3,8 +3,25 @@ package responses
 import (
 	"encoding/json"
 	"errors"
+
+	"github.com/uber/gonduit/entities"
 	"github.com/uber/gonduit/util"
 )
+
+// ManiphestQueryResponse is the response of calling maniphest.query.
+type ManiphestQueryResponse map[string]*entities.ManiphestTask
+
+// Get gets the task with the speicfied numeric ID.
+func (res ManiphestQueryResponse) Get(key string) *entities.ManiphestTask {
+	if _, ok := res[key]; ok {
+		return res[key]
+	}
+
+	return nil
+}
+
+// ManiphestGetTaskTransactionsResponse is the response of calling maniphest.query.
+type ManiphestGetTaskTransactionsResponse map[string][]*entities.ManiphestTaskTranscation
 
 // ManiphestSearchResponse contains fields that are in server response to maniphest.search.
 type ManiphestSearchResponse struct {

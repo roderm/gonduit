@@ -1,8 +1,23 @@
 package responses
 
 import (
+	"github.com/uber/gonduit/entities"
 	"github.com/uber/gonduit/util"
 )
+
+// DifferentialQueryResponse is the response of calling differential.query.
+type DifferentialQueryResponse []*entities.DifferentialRevision
+
+// DifferentialQueryDiffsResponse is the response of calling differential.querydiffs.
+type DifferentialQueryDiffsResponse []*entities.DifferentialDiff
+
+// DifferentialGetCommitPathsResponse is the response of calling
+// differential.getcommitpaths.
+type DifferentialGetCommitPathsResponse []string
+
+// DifferentialGetCommitMessageResponse is the response of calling
+// differential.getcommitmessage.
+type DifferentialGetCommitMessageResponse string
 
 // DifferentialRevisionSearchResponse contains fields that are in server
 // response to differential.revision.search.
