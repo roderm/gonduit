@@ -66,3 +66,19 @@ func (c *Conn) DifferentialGetCommitMessage(
 
 	return &res, nil
 }
+
+// DifferentialRevisionSearchMethod is method name on Phabricator API.
+const DifferentialRevisionSearchMethod = "differential.revision.search"
+
+// DifferentialRevisionSearch performs a call to differential.revision.search.
+func (c *Conn) DifferentialRevisionSearch(
+	req requests.DifferentialRevisionSearchRequest,
+) (*responses.DifferentialRevisionSearchResponse, error) {
+	var res responses.DifferentialRevisionSearchResponse
+
+	if err := c.Call(DifferentialRevisionSearchMethod, &req, &res); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}
