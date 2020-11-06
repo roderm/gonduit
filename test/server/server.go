@@ -1,7 +1,9 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/http/httptest"
 
 	"github.com/gin-gonic/gin"
@@ -9,22 +11,70 @@ import (
 
 // Server is a mock conduit server.
 type Server struct {
-	engine *gin.Engine
-	server *httptest.Server
+	server  *httptest.Server
+	handler *handler
 }
 
 // New creates a new empty conduit server.
 func New() *Server {
-	gin.SetMode(gin.TestMode)
-
-	r := gin.New()
-
-	ts := httptest.NewServer(r)
+	h := newHandler()
+	ts := httptest.NewServer(h)
 
 	return &Server{
-		engine: r,
-		server: ts,
+		server:  ts,
+		handler: h,
 	}
+}
+
+type handlerResponse struct {
+	HTTPCode int
+	Payload  map[string]interface{}
+}
+
+type handler struct {
+	routes map[string]handlerResponse
+}
+
+func newHandler() *handler {
+	return &handler{
+		routes: make(map[string]handlerResponse),
+	}
+}
+
+func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	// Serve only POST requests.
+	if req.Method != "POST" {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	response, ok := h.routes[req.RequestURI]
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	data, err := json.Marshal(response.Payload)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(response.HTTPCode)
+	w.Write(data)
+}
+
+func (h *handler) RegisterMethod(
+	method string,
+	httpCode int,
+	response map[string]interface{},
+) {
+	h.routes[method] = handlerResponse{
+		HTTPCode: httpCode,
+		Payload:  response,
+	}
+
 }
 
 // RegisterCapabilities adds a default handler for the
@@ -32,10 +82,10 @@ func New() *Server {
 func (s *Server) RegisterCapabilities() {
 	s.RegisterMethod("conduit.getcapabilities", 200, gin.H{
 		"result": map[string][]string{
-			"authentication": []string{"token", "session"},
-			"signatures":     []string{"consign"},
-			"input":          []string{"json", "urlencoded"},
-			"output":         []string{"json"},
+			"authentication": {"token", "session"},
+			"signatures":     {"consign"},
+			"input":          {"json", "urlencoded"},
+			"output":         {"json"},
 		},
 	})
 }
@@ -46,9 +96,7 @@ func (s *Server) RegisterMethod(
 	httpCode int,
 	response map[string]interface{},
 ) {
-	s.engine.POST(fmt.Sprintf("/api/%s", method), func(c *gin.Context) {
-		c.JSON(httpCode, response)
-	})
+	s.handler.RegisterMethod(fmt.Sprintf("/api/%s", method), httpCode, response)
 }
 
 // GetURL returns the URL of the root of the server.
