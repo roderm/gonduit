@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/uber/gonduit/core"
 	"github.com/uber/gonduit/entities"
@@ -18,12 +17,13 @@ func TestDifferentialGetCommitPaths(t *testing.T) {
 	defer s.Close()
 	s.RegisterCapabilities()
 
-	s.RegisterMethod(DifferentialGetCommitPathsMethod, http.StatusOK, gin.H{
-		"result": []string{
+	response := server.ResponseFromJSON(`{
+		"result": [
 			"differential.go",
-			"differential_test.go",
-		},
-	})
+			"differential_test.go"
+		]
+	}`)
+	s.RegisterMethod(DifferentialGetCommitPathsMethod, http.StatusOK, response)
 
 	c, err := Dial(s.GetURL(), &core.ClientOptions{
 		APIToken: "some-token",
@@ -44,9 +44,10 @@ func TestDifferentialGetCommitMessage(t *testing.T) {
 	defer s.Close()
 	s.RegisterCapabilities()
 
-	s.RegisterMethod(DifferentialGetCommitMessageMethod, http.StatusOK, gin.H{
-		"result": "Commit description.",
-	})
+	response := server.ResponseFromJSON(`{
+		"result": "Commit description."
+	}`)
+	s.RegisterMethod(DifferentialGetCommitMessageMethod, http.StatusOK, response)
 
 	c, err := Dial(s.GetURL(), &core.ClientOptions{
 		APIToken: "some-token",
@@ -64,20 +65,18 @@ func TestDifferentialGetCommitMessage(t *testing.T) {
 func TestDifferentialQuery(t *testing.T) {
 
 	tests := map[string]struct {
-		apiResponse gin.H
+		apiResponse string
 		want        entities.DifferentialRevision
 	}{
 		"response_with_reviewers": {
-			apiResponse: gin.H{
-				"result": []gin.H{
-					gin.H{
-						"id": "123",
-						"reviewers": map[string]string{
-							"PHID-USER-123": "PHID-USER-123",
-						},
-					},
-				},
-			},
+			apiResponse: `{
+				"result": [{
+					"id": "123",
+					"reviewers": {
+						"PHID-USER-123": "PHID-USER-123"
+					}
+				}]
+			}`,
 			want: entities.DifferentialRevision{
 				ID: "123",
 				Reviewers: entities.DifferentialRevisionReviewers{
@@ -89,14 +88,12 @@ func TestDifferentialQuery(t *testing.T) {
 		// do not exist. And a map when they do. This case should be handled
 		// separately when unmarshaling JSON in Golang.
 		"response_with_no_reviewers": {
-			apiResponse: gin.H{
-				"result": []gin.H{
-					gin.H{
-						"id":        "123",
-						"reviewers": []string{},
-					},
-				},
-			},
+			apiResponse: `{
+				"result": [{
+					"id": "123",
+					"reviewers": []
+				}]
+			}`,
 			want: entities.DifferentialRevision{
 				ID: "123",
 			},
@@ -113,7 +110,7 @@ func TestDifferentialQuery(t *testing.T) {
 			s.RegisterCapabilities()
 
 			s.RegisterMethod(
-				DifferentialQueryMethod, http.StatusOK, test.apiResponse)
+				DifferentialQueryMethod, http.StatusOK, server.ResponseFromJSON(test.apiResponse))
 			c, err := Dial(s.GetURL(), &core.ClientOptions{
 				APIToken: "some-token",
 			})
@@ -129,70 +126,72 @@ func TestDifferentialQuery(t *testing.T) {
 
 }
 
-func searchAPIResponse(data interface{}) map[string]interface{} {
-	return gin.H{
-		"result": gin.H{
-			"data": data,
-			"query": gin.H{
-				"queryKey": nil,
-			},
-			"cursor": gin.H{
-				"limit":  100,
-				"after":  nil,
-				"before": nil,
-				"order":  nil,
-			},
-		},
-	}
-}
+const differentialRevisionSearchResponseJSON = `{
+  "result": {
+    "data": [
+      {
+        "id": 123,
+        "type": "DREV",
+        "phid": "PHID-DREV-000",
+        "fields": {
+          "title": "Revision title",
+          "uri": "https://secure.phabricator.com/D1",
+          "authorPHID": "PHID-USER-000",
+          "repositoryPHID": "PHID-REPO-000",
+          "diffPHID": "PHID-DIFF-000",
+          "summary": "Revision summary",
+          "testPlan": "Test plan",
+          "isDraft": true,
+          "holdAsDraft": true,
+          "status": {
+            "value": "needs-review",
+            "name": "Needs Review",
+            "closed": false
+          }
+        },
+        "attachments": {
+          "reviewers": {
+            "reviewers": [
+              {
+                "reviewerPHID": "PHID-USER-123",
+                "status": "added",
+                "isBlocking": true
+              }
+            ]
+          },
+          "subscribers": {
+            "subscriberPHIDs": [
+              "PHID-USER-456"
+            ],
+            "subscriberCount": 1,
+            "viewerIsSubscribed": true
+          },
+          "projects": {
+            "projectPHIDs": [
+              "PHID-PROJ-123"
+            ]
+          }
+        }
+      }
+    ],
+    "query": {
+      "queryKey": null
+    },
+    "cursor": {
+      "limit": 100,
+      "after": null,
+      "before": null,
+      "order": null
+    }
+  }
+}`
 
 func TestDifferentialRevisionSearch(t *testing.T) {
 	s := server.New()
 	defer s.Close()
 	s.RegisterCapabilities()
-	data := []gin.H{
-		gin.H{
-			"id":   123,
-			"type": "DREV",
-			"phid": "PHID-DREV-000",
-			"fields": gin.H{
-				"title":          "Revision title",
-				"uri":            "https://secure.phabricator.com/D1",
-				"authorPHID":     "PHID-USER-000",
-				"repositoryPHID": "PHID-REPO-000",
-				"diffPHID":       "PHID-DIFF-000",
-				"summary":        "Revision summary",
-				"testPlan":       "Test plan",
-				"isDraft":        true,
-				"holdAsDraft":    true,
-				"status": gin.H{
-					"value":  "needs-review",
-					"name":   "Needs Review",
-					"closed": false,
-				},
-			},
-			"attachments": gin.H{
-				"reviewers": gin.H{
-					"reviewers": []gin.H{
-						{
-							"reviewerPHID": "PHID-USER-123",
-							"status":       "added",
-							"isBlocking":   true,
-						},
-					},
-				},
-				"subscribers": gin.H{
-					"subscriberPHIDs":    []string{"PHID-USER-456"},
-					"subscriberCount":    1,
-					"viewerIsSubscribed": true,
-				},
-				"projects": gin.H{
-					"projectPHIDs": []string{"PHID-PROJ-123"},
-				},
-			},
-		},
-	}
-	s.RegisterMethod(DifferentialRevisionSearchMethod, http.StatusOK, searchAPIResponse(data))
+	response := server.ResponseFromJSON(differentialRevisionSearchResponseJSON)
+	s.RegisterMethod(DifferentialRevisionSearchMethod, http.StatusOK, response)
 
 	c, err := Dial(s.GetURL(), &core.ClientOptions{
 		APIToken: "some-token",

@@ -3,7 +3,6 @@ package gonduit
 import (
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/uber/gonduit/core"
 	"github.com/uber/gonduit/test/server"
@@ -14,17 +13,18 @@ func TestConduitQuery(t *testing.T) {
 	defer s.Close()
 	s.RegisterCapabilities()
 
-	s.RegisterMethod("conduit.query", 200, gin.H{
-		"result": gin.H{
-			"phid.query": gin.H{
-				"description": "Retrieve information about arbitrary PHIDs.",
-				"params": gin.H{
-					"phids": "required list<phid>",
-				},
-				"return": "nonempty dict<string, wild>",
-			},
-		},
-	})
+	response := server.ResponseFromJSON(`{
+	  "result": {
+		"phid.query": {
+		  "description": "Retrieve information about arbitrary PHIDs.",
+		  "params": {
+			"phids": "required list<phid>"
+		  },
+		  "return": "nonempty dict<string, wild>"
+		}
+	  }
+	}`)
+	s.RegisterMethod("conduit.query", 200, response)
 
 	c, err := Dial(s.GetURL(), &core.ClientOptions{
 		APIToken: "some-token",

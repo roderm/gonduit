@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-
-	"github.com/gin-gonic/gin"
 )
 
 // Server is a mock conduit server.
@@ -77,17 +75,38 @@ func (h *handler) RegisterMethod(
 
 }
 
+// ResponseFromJSON builds a response map expected by RegisterMethod from a raw
+// JSON provided as bytes slice.
+func ResponseFromJSON(data string) map[string]interface{} {
+	response := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(data), &response); err != nil {
+		panic(err)
+	}
+	return response
+}
+
 // RegisterCapabilities adds a default handler for the
 // `conduit.getcapabilities` API endpoint.
 func (s *Server) RegisterCapabilities() {
-	s.RegisterMethod("conduit.getcapabilities", 200, gin.H{
-		"result": map[string][]string{
-			"authentication": {"token", "session"},
-			"signatures":     {"consign"},
-			"input":          {"json", "urlencoded"},
-			"output":         {"json"},
-		},
-	})
+	response := ResponseFromJSON(`{
+	  "result": {
+		  "authentication": [
+			"token",
+			"session"
+		  ],
+		  "signatures": [
+			"consign"
+		  ],
+		  "input": [
+			"json",
+			"urlencoded"
+		  ],
+		  "output": [
+			"json"
+		  ]
+	  }
+	}`)
+	s.RegisterMethod("conduit.getcapabilities", 200, response)
 }
 
 // RegisterMethod adds a handler for a specific conduit API method.
