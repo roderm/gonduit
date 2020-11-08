@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2020-11-08
+### Changed
+- Refactored test server by removing `gin` as dependency.
+- Rewritten tests to not depend on `gin`.
+
+### Removed
+- Gonduit does not depend on `gin` library anymore.
+
 ## [0.7.0] - 2020-11-05
 ### Added
 - Support for `differential.revision.search` endpoint.
