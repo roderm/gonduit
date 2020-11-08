@@ -49,6 +49,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	response, ok := h.routes[req.RequestURI]
 	if !ok {
 		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Method not registered. Call RegisterMethod to register."))
 		return
 	}
 

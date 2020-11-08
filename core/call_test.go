@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/uber/gonduit/responses"
+	"github.com/uber/gonduit/test/server"
 )
 
 func TestGetEndpointURI(t *testing.T) {
@@ -20,26 +20,14 @@ func TestGetEndpointURI(t *testing.T) {
 }
 
 func TestPerformCall(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	r := gin.New()
-	r.POST("/api/conduit.getcapabilities", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"result": map[string][]string{
-				"authentication": []string{"token", "session"},
-				"signatures":     []string{"consign"},
-				"input":          []string{"json", "urlencoded"},
-				"output":         []string{"json"},
-			},
-		})
-	})
-
-	ts := httptest.NewServer(r)
+	ts := server.New()
 	defer ts.Close()
+	ts.RegisterCapabilities()
 
 	result := map[string]interface{}{}
 
 	err := PerformCall(
-		ts.URL+"/api/conduit.getcapabilities",
+		ts.GetURL()+"/api/conduit.getcapabilities",
 		map[string]interface{}{},
 		&result,
 		&ClientOptions{},
@@ -49,22 +37,16 @@ func TestPerformCall(t *testing.T) {
 }
 
 func TestPerformCall_withEmptyArray(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	r := gin.New()
-	r.POST("/api/phid.lookup", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"result": []string{},
-		})
-	})
-
-	ts := httptest.NewServer(r)
+	ts := server.New()
 	defer ts.Close()
+	response := server.ResponseFromJSON(`{"result":[]}`)
+	ts.RegisterMethod("phid.lookup", 200, response)
 
 	var result responses.PHIDLookupResponse
 	ptr := &result
 
 	err := PerformCall(
-		ts.URL+"/api/phid.lookup",
+		ts.GetURL()+"/api/phid.lookup",
 		map[string]interface{}{},
 		&ptr,
 		&ClientOptions{},
@@ -74,56 +56,40 @@ func TestPerformCall_withEmptyArray(t *testing.T) {
 }
 
 func TestPerformCall_withErrorCode(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	r := gin.New()
-	r.POST("/api/conduit.getcapabilities", func(c *gin.Context) {
-		c.Writer.WriteHeader(http.StatusUnauthorized)
-		c.Writer.Write([]byte("<html>this is definitely not a json!</html>"))
-		return
-	})
-
-	ts := httptest.NewServer(r)
+	ts := server.New()
 	defer ts.Close()
 
 	result := map[string]interface{}{}
 
 	err := PerformCall(
-		ts.URL+"/api/conduit.getcapabilities",
+		ts.GetURL()+"/api/conduit.getcapabilities",
 		map[string]interface{}{},
 		&result,
 		&ClientOptions{},
 	)
 
-	code := strconv.Itoa(http.StatusUnauthorized)
+	code := strconv.Itoa(http.StatusNotFound)
 	assert.Equal(t, &ConduitError{
 		code: code,
-		info: "<html>this is definitely not a json!</html>",
+		info: "Method not registered. Call RegisterMethod to register.",
 	}, err)
 }
 
 func TestPerformCall_withBadHTTPResponseCode(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	r := gin.New()
-	r.POST("/api/conduit.getcapabilities", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"result": map[string][]string{
-				"authentication": []string{"token", "session"},
-				"signatures":     []string{"consign"},
-				"input":          []string{"json", "urlencoded"},
-				"output":         []string{"json"},
-			},
-			"error_code": "ERR-CONDUIT-CORE",
-			"error_info": "Something bad happened",
-		})
-	})
-
-	ts := httptest.NewServer(r)
+	ts := server.New()
 	defer ts.Close()
+
+	response := `{
+	  "result": "Some result",
+	  "error_code": "ERR-CONDUIT-CORE",
+	  "error_info": "Something bad happened"
+	}`
+	ts.RegisterMethod("return.error", http.StatusOK, server.ResponseFromJSON(response))
 
 	result := map[string]interface{}{}
 
 	err := PerformCall(
-		ts.URL+"/api/conduit.getcapabilities",
+		ts.GetURL()+"/api/return.error",
 		map[string]interface{}{},
 		&result,
 		&ClientOptions{},
@@ -136,13 +102,10 @@ func TestPerformCall_withBadHTTPResponseCode(t *testing.T) {
 }
 
 func TestPerformCall_withMissingResults(t *testing.T) {
-	gin.SetMode(gin.TestMode)
-	r := gin.New()
-	r.POST("/api/conduit.getcapabilities", func(c *gin.Context) {
-		c.JSON(200, gin.H{})
-	})
-
-	ts := httptest.NewServer(r)
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{}`))
+	}))
 	defer ts.Close()
 
 	result := map[string]interface{}{}
