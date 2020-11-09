@@ -71,7 +71,7 @@ func TestPerformCall_withErrorCode(t *testing.T) {
 	code := strconv.Itoa(http.StatusNotFound)
 	assert.Equal(t, &ConduitError{
 		code: code,
-		info: "Method not registered. Call RegisterMethod to register.",
+		info: "404 page not found",
 	}, err)
 }
 
