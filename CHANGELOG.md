@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2020-11-09
+### Changed
+- Restored  test server 404 response to keep backwards compatibility with
+  earlier versions.
+
 ## [0.8.0] - 2020-11-08
 ### Changed
 - Refactored test server by removing `gin` as dependency.
