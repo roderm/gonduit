@@ -121,6 +121,7 @@ for more information on how to use them.
 - differential.revision.search
 - diffusion.querycommit
 - file.download
+- harbormaster.buildable.search
 - macro.creatememe
 - maniphest.createtask
 - maniphest.gettasktransactions

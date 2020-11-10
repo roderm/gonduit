@@ -37,6 +37,8 @@ type DifferentialRevisionSearchResponseItem struct {
 	Attachments DifferentialRevisionSearchAttachments        `json:"attachments"`
 }
 
+// DifferentialRevisionSearchResponseItemFields is a collection of object
+// fields.
 type DifferentialRevisionSearchResponseItemFields struct {
 	Title          string                     `json:"title"`
 	URI            string                     `json:"uri"`
