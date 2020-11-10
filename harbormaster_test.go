@@ -70,7 +70,7 @@ func TestHarbormasterBuildableSearch(t *testing.T) {
 	want := responses.HarbormasterBuildableSearchResponse{
 		Data: []*responses.HarbormasterBuildableSearchResponseItem{
 			{
-				SearchResponse: responses.SearchResponse{
+				ResponseObject: responses.ResponseObject{
 					ID:   54057,
 					Type: "HMBB",
 					PHID: "PHID-HMBB-6tceawkrkt55btokp7es",

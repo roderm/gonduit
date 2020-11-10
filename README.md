@@ -120,6 +120,7 @@ for more information on how to use them.
 - differential.query
 - differential.revision.search
 - diffusion.querycommit
+- diffusion.repository.search
 - file.download
 - harbormaster.buildable.search
 - macro.creatememe

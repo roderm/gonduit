@@ -18,8 +18,9 @@ type HarbormasterBuildableSearchResponse struct {
 // HarbormasterBuildableSearchResponseItem contains information about a
 // particular search result.
 type HarbormasterBuildableSearchResponseItem struct {
-	SearchResponse
+	ResponseObject
 	Fields HarbormasterBuildableSearchResponseItemFields `json:"fields"`
+	SearchCursor
 }
 
 // HarbormasterBuildableSearchResponseItemFields is a collection of object

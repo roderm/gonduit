@@ -212,7 +212,7 @@ func TestDifferentialRevisionSearch(t *testing.T) {
 	want := responses.DifferentialRevisionSearchResponse{
 		Data: []*responses.DifferentialRevisionSearchResponseItem{
 			{
-				SearchResponse: responses.SearchResponse{
+				ResponseObject: responses.ResponseObject{
 					ID:   123,
 					Type: "DREV",
 					PHID: "PHID-DREV-000",

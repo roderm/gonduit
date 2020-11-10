@@ -1,12 +1,11 @@
 package responses
 
-// SearchResponse struct holds fields which are common for all *.search API
-// methods.
-type SearchResponse struct {
+// ResponseObject holds fields which are common for all objects returned from
+// *.search API methods.
+type ResponseObject struct {
 	ID   int    `json:"id"`
 	Type string `json:"type"`
 	PHID string `json:"phid"`
-	SearchCursor
 }
 
 // SearchCursor holds paging information on responses from *.search API methods.

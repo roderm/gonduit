@@ -28,3 +28,12 @@ type AttachmentReviewer struct {
 	ActorPHID       string `json:"actorPHID"`
 	IsCurrentAction bool   `json:"isCurrentAction"`
 }
+
+// SearchAttachmentMetrics is an attachment of repository metrics.
+type SearchAttachmentMetrics struct {
+	CommitCount int `json:"commitCount"`
+}
+
+type SearchAttachmentURIs struct {
+	URIs []RepositoryURIItem `json:"uris"`
+}

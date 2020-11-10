@@ -32,9 +32,10 @@ type DifferentialRevisionSearchResponse struct {
 // DifferentialRevisionSearchResponseItem contains information about a
 // particular search result.
 type DifferentialRevisionSearchResponseItem struct {
-	SearchResponse
+	ResponseObject
 	Fields      DifferentialRevisionSearchResponseItemFields `json:"fields"`
 	Attachments DifferentialRevisionSearchAttachments        `json:"attachments"`
+	SearchCursor
 }
 
 // DifferentialRevisionSearchResponseItemFields is a collection of object
