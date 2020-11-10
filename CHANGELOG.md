@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2020-11-10
+### Added
+- Support for `harbormaster.buildable.search` method.
+- Support for `diffusion.repository.search` method.
+
+### Changed
+- `responses.SearchResponse` struct was renamed to `ResponseObject` and embeded
+  `SearchCursor` was removed from it because not every object has a search
+  cursor.
+
 ## [0.8.1] - 2020-11-09
 ### Changed
 - Restored  test server 404 response to keep backwards compatibility with
