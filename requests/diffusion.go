@@ -55,10 +55,10 @@ type DiffusionRepositorySearchConstraints struct {
 // additional data should be returned with search results.
 type DiffusionRepositorySearchAttachments struct {
 	// URIs returns a list of associated URIs for each repository.
-	URIs bool `json:"reviewers,omitempty"`
+	URIs bool `json:"uris,omitempty"`
 	// Metrics returns commit count, most recent commit and other metrics
 	// for each repository.
-	Metrics bool `json:"subscribers,omitempty"`
+	Metrics bool `json:"metrics,omitempty"`
 	// Projects requests to get information about projects.
 	Projects bool `json:"projects,omitempty"`
 }
