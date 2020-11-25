@@ -121,6 +121,7 @@ for more information on how to use them.
 - differential.revision.search
 - diffusion.querycommit
 - diffusion.repository.search
+- edge.search
 - file.download
 - harbormaster.buildable.search
 - macro.creatememe
