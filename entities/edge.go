@@ -10,6 +10,7 @@ var (
 	EdgeMentionedIn    EdgeType = "mentioned-in"
 	EdgeRevisionChild  EdgeType = "revision.child"
 	EdgeRevisionCommit EdgeType = "revision.commit"
+	EdgeRevisionParent EdgeType = "revision.parent"
 	EdgeRevisionTask   EdgeType = "revision.task"
 	EdgeTaskCommit     EdgeType = "task.commit"
 	EdgeTaskDuplicate  EdgeType = "task.duplicate"
