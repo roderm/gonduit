@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2020-11-26
+### Added
+- Support for `edge.search` method.
+
 ## [0.9.1] - 2020-11-17
 ### Fixed
 - `diffusion.repository.search` was not sending attachments correctly.
