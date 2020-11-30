@@ -1,5 +1,7 @@
 package responses
 
+import "github.com/uber/gonduit/util"
+
 // SearchAttachmentSubscribers is common attachment with subscribers information
 // for *.search API methods.
 type SearchAttachmentSubscribers struct {
@@ -36,4 +38,24 @@ type SearchAttachmentMetrics struct {
 
 type SearchAttachmentURIs struct {
 	URIs []RepositoryURIItem `json:"uris"`
+}
+
+// SearchAttachmentCommits is an attachment of diff commits.
+type SearchAttachmentCommits struct {
+	Commits []AttachmentCommit `json:"commits"`
+}
+
+type AttachmentCommit struct {
+	Identifier string                 `json:"identifier"`
+	Tree       string                 `json:"tree"`
+	Parents    []string               `json:"parents"`
+	Author     AttachmentCommitAuthor `json:"author"`
+	Message    string                 `json:"message"`
+}
+
+type AttachmentCommitAuthor struct {
+	Name  string             `json:"name"`
+	Email string             `json:"email"`
+	Raw   string             `json:"raw"`
+	Epoch util.UnixTimestamp `json:"epoch"`
 }

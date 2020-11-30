@@ -260,3 +260,148 @@ func TestDifferentialRevisionSearch(t *testing.T) {
 	}
 	assert.Equal(t, &want, resp)
 }
+
+const differentialDiffSearchResponseJSON = `{
+  "result": {
+    "data": [
+      {
+        "id": 123,
+        "type": "DIFF",
+        "phid": "PHID-DIFF-123",
+        "fields": {
+          "revisionPHID": "PHID-DREV-123",
+          "authorPHID": "PHID-USER-123",
+          "repositoryPHID": "PHID-REPO-123",
+          "refs": [
+            {
+              "type": "branch",
+              "name": "patch"
+            },
+            {
+              "type": "onto",
+              "name": "master"
+            },
+            {
+              "type": "base",
+              "identifier": "aaaa"
+            }
+          ],
+          "dateCreated": 1606253067,
+          "dateModified": 1606253237,
+          "policy": {
+            "view": "users"
+          }
+        },
+        "attachments": {
+          "commits": {
+            "commits": [
+              {
+                "identifier": "bbb",
+                "tree": "ccc",
+                "parents": [
+                  "ddd"
+                ],
+                "author": {
+                  "name": "Author Subauthor",
+                  "email": "author@example.com",
+                  "raw": "\"Author Subauthor\" <author@example.com>",
+                  "epoch": 1606252972
+                },
+                "message": "Title\n\nSummary: Summary\n\n"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "maps": [],
+    "query": {
+      "queryKey": null
+    },
+    "cursor": {
+      "limit": 100,
+      "after": null,
+      "before": null,
+      "order": null
+    }
+  }
+}`
+
+func TestDifferentialDiffSearch(t *testing.T) {
+	s := server.New()
+	defer s.Close()
+	s.RegisterCapabilities()
+	response := server.ResponseFromJSON(differentialDiffSearchResponseJSON)
+	s.RegisterMethod(DifferentialDiffSearchMethod, http.StatusOK, response)
+
+	c, err := Dial(s.GetURL(), &core.ClientOptions{
+		APIToken: "some-token",
+	})
+	assert.Nil(t, err)
+	req := requests.DifferentialDiffSearchRequest{
+		Constraints: &requests.DifferentialDiffSearchConstraints{
+			IDs: []int{123},
+		},
+		Attachments: &requests.DifferentialDiffSearchAttachments{
+			Commits: true,
+		},
+	}
+	resp, err := c.DifferentialDiffSearch(req)
+	assert.NoError(t, err)
+	want := responses.DifferentialDiffSearchResponse{
+		Data: []*responses.DifferentialDiffSearchResponseItem{
+			{
+				ResponseObject: responses.ResponseObject{
+					ID:   123,
+					Type: "DIFF",
+					PHID: "PHID-DIFF-123",
+				},
+				Fields: responses.DifferentialDiffSearchResponseItemFields{
+					RevisionPHID: "PHID-DREV-123",
+					AuthorPHID: "PHID-USER-123",
+					RepositoryPHID: "PHID-REPO-123",
+					Refs: []responses.DifferentialDiffRef {
+						{
+							Type: "branch",
+							Name: "patch",
+						},
+						{
+							Type: "onto",
+							Name: "master",
+						},
+						{
+							Type: "base",
+							Identifier: "aaaa",
+						},
+					},
+					DateCreated: timestamp(1606253067),
+					DateModified: timestamp(1606253237),
+				},
+				Attachments: responses.DifferentialDiffSearchAttachments{
+					Commits: responses.SearchAttachmentCommits{
+						Commits: []responses.AttachmentCommit{
+							{
+								Identifier: "bbb",
+								Tree:   "ccc",
+								Parents: []string{
+									"ddd",
+								},
+								Author: responses.AttachmentCommitAuthor{
+									Name: "Author Subauthor",
+									Email: "author@example.com",
+									Raw: "\"Author Subauthor\" <author@example.com>",
+									Epoch: timestamp(1606252972),
+								},
+								Message: "Title\n\nSummary: Summary\n\n",
+							},
+						},
+					},
+				},
+			},
+		},
+		Cursor: responses.SearchCursor{
+			Limit: 100,
+		},
+	}
+	assert.Equal(t, &want, resp)
+}

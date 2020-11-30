@@ -25,7 +25,7 @@ type DifferentialRevisionSearchResponse struct {
 	// Data contains search results.
 	Data []*DifferentialRevisionSearchResponseItem `json:"data"`
 
-	// Curson contains paging data.
+	// Cursor contains paging data.
 	Cursor SearchCursor `json:"cursor,omitempty"`
 }
 
@@ -68,4 +68,44 @@ type DifferentialRevisionSearchAttachments struct {
 	Reviewers   SearchAttachmentReviewers   `json:"reviewers"`
 	Subscribers SearchAttachmentSubscribers `json:"subscribers"`
 	Projects    SearchAttachmentProjects    `json:"projects"`
+}
+
+// DifferentialDiffSearchResponse contains fields that are in server
+// response to differential.diff.search.
+type DifferentialDiffSearchResponse struct {
+	// Data contains search results.
+	Data []*DifferentialDiffSearchResponseItem `json:"data"`
+
+	// Cursor contains paging data.
+	Cursor SearchCursor `json:"cursor,omitempty"`
+}
+
+// DifferentialDiffSearchResponseItem contains information about a
+// particular search result.
+type DifferentialDiffSearchResponseItem struct {
+	ResponseObject
+	Fields      DifferentialDiffSearchResponseItemFields `json:"fields"`
+	Attachments DifferentialDiffSearchAttachments        `json:"attachments"`
+	SearchCursor
+}
+
+// DifferentialDiffSearchResponseItemFields is a collection of object
+// fields.
+type DifferentialDiffSearchResponseItemFields struct {
+	RevisionPHID   string                `json:"revisionPHID"`
+	AuthorPHID     string                `json:"authorPHID"`
+	RepositoryPHID string                `json:"repositoryPHID"`
+	Refs           []DifferentialDiffRef `json:"refs"`
+	DateCreated    util.UnixTimestamp    `json:"dateCreated"`
+	DateModified   util.UnixTimestamp    `json:"dateModified"`
+}
+
+type DifferentialDiffRef struct {
+	Type       string `json:"type"`
+	Identifier string `json:"identifier"`
+	Name       string `json:"name"`
+}
+
+type DifferentialDiffSearchAttachments struct {
+	Commits SearchAttachmentCommits `json:"commits"`
 }
