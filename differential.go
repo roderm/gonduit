@@ -82,3 +82,19 @@ func (c *Conn) DifferentialRevisionSearch(
 
 	return &res, nil
 }
+
+// DifferentialDiffSearchMethod is method name on Phabricator API.
+const DifferentialDiffSearchMethod = "differential.diff.search"
+
+// DifferentialDiffSearch performs a call to differential.diff.search.
+func (c *Conn) DifferentialDiffSearch(
+	req requests.DifferentialDiffSearchRequest,
+) (*responses.DifferentialDiffSearchResponse, error) {
+	var res responses.DifferentialDiffSearchResponse
+
+	if err := c.Call(DifferentialDiffSearchMethod, &req, &res); err != nil {
+		return nil, err
+	}
+
+	return &res, nil
+}

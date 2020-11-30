@@ -95,3 +95,34 @@ type DifferentialRevisionSearchConstraints struct {
 	Subscribers      []string            `json:"subscribers,omitempty"`
 	Projects         []string            `json:"projects,omitempty"`
 }
+
+// DifferentialDiffSearchRequest represents a request to
+// differential.diff.search API method.
+type DifferentialDiffSearchRequest struct {
+	// QueryKey is builtin or saved query to use. It is optional and sets
+	// initial constraints.
+	QueryKey string `json:"queryKey,omitempty"`
+	// Constraints contains additional filters for results. Applied on top of
+	// query if provided.
+	Constraints *DifferentialDiffSearchConstraints `json:"constraints,omitempty"`
+	// Attachments specified what additional data should be returned with each
+	// result.
+	Attachments *DifferentialDiffSearchAttachments `json:"attachments,omitempty"`
+
+	*entities.Cursor
+	Request
+}
+
+// DifferentialDiffSearchAttachments contains fields that specify what
+// additional data should be returned with search results.
+type DifferentialDiffSearchAttachments struct {
+	// Get the local commits (if any) for each diff.
+	Commits bool `json:"commits,omitempty"`
+}
+
+// DifferentialDiffSearchConstraints describes search criteria for request.
+type DifferentialDiffSearchConstraints struct {
+	IDs              []int               `json:"ids,omitempty"`
+	PHIDs            []string            `json:"phids,omitempty"`
+	RevisionPHIDs    []string            `json:"revisionPHIDs,omitempty"`
+}
