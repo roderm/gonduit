@@ -75,5 +75,8 @@ type RepositoryURIItemFields struct {
 
 // RepositoryURI is VCS uri.
 type RepositoryURI struct {
-	Raw string `json:"raw"`
+	Raw        string `json:"raw"`
+	Display    string `json:"display"`
+	Effective  string `json:"effective"`
+	Normalized string `json:"normalized"`
 }
