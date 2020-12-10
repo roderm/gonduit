@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.11.0] - 2020-1202
+## [0.12.0] - 2020-12-10
+### Added
+- Support for `project.search` method.
+- Added missing fields to RepositoryURI struct
+
+### Fixed
+- `go fmt` executed
+
+## [0.11.0] - 2020-12-02
 ### Added
 - Support for `transaction.search` method.
 - Support for `differential.diff.search` method.
