@@ -357,10 +357,10 @@ func TestDifferentialDiffSearch(t *testing.T) {
 					PHID: "PHID-DIFF-123",
 				},
 				Fields: responses.DifferentialDiffSearchResponseItemFields{
-					RevisionPHID: "PHID-DREV-123",
-					AuthorPHID: "PHID-USER-123",
+					RevisionPHID:   "PHID-DREV-123",
+					AuthorPHID:     "PHID-USER-123",
 					RepositoryPHID: "PHID-REPO-123",
-					Refs: []responses.DifferentialDiffRef {
+					Refs: []responses.DifferentialDiffRef{
 						{
 							Type: "branch",
 							Name: "patch",
@@ -370,11 +370,11 @@ func TestDifferentialDiffSearch(t *testing.T) {
 							Name: "master",
 						},
 						{
-							Type: "base",
+							Type:       "base",
 							Identifier: "aaaa",
 						},
 					},
-					DateCreated: timestamp(1606253067),
+					DateCreated:  timestamp(1606253067),
 					DateModified: timestamp(1606253237),
 				},
 				Attachments: responses.DifferentialDiffSearchAttachments{
@@ -382,14 +382,14 @@ func TestDifferentialDiffSearch(t *testing.T) {
 						Commits: []responses.AttachmentCommit{
 							{
 								Identifier: "bbb",
-								Tree:   "ccc",
+								Tree:       "ccc",
 								Parents: []string{
 									"ddd",
 								},
 								Author: responses.AttachmentCommitAuthor{
-									Name: "Author Subauthor",
+									Name:  "Author Subauthor",
 									Email: "author@example.com",
-									Raw: "\"Author Subauthor\" <author@example.com>",
+									Raw:   "\"Author Subauthor\" <author@example.com>",
 									Epoch: timestamp(1606252972),
 								},
 								Message: "Title\n\nSummary: Summary\n\n",

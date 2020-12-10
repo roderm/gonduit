@@ -122,7 +122,7 @@ type DifferentialDiffSearchAttachments struct {
 
 // DifferentialDiffSearchConstraints describes search criteria for request.
 type DifferentialDiffSearchConstraints struct {
-	IDs              []int               `json:"ids,omitempty"`
-	PHIDs            []string            `json:"phids,omitempty"`
-	RevisionPHIDs    []string            `json:"revisionPHIDs,omitempty"`
+	IDs           []int    `json:"ids,omitempty"`
+	PHIDs         []string `json:"phids,omitempty"`
+	RevisionPHIDs []string `json:"revisionPHIDs,omitempty"`
 }

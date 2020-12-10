@@ -145,7 +145,7 @@ func TestTransactionSearch(t *testing.T) {
 				GroupID:      "123456",
 				DateCreated:  timestamp(1606741970),
 				DateModified: timestamp(1606741970),
-				Comments: []responses.TransactionSearchResponseItemComment{},
+				Comments:     []responses.TransactionSearchResponseItemComment{},
 			},
 		},
 		Cursor: entities.Cursor{
