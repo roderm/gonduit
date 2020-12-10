@@ -59,3 +59,23 @@ type AttachmentCommitAuthor struct {
 	Raw   string             `json:"raw"`
 	Epoch util.UnixTimestamp `json:"epoch"`
 }
+
+type SearchAttachmentMembers struct {
+	Members []AttachmentMember `json:"members"`
+}
+
+type AttachmentMember struct {
+	PHID string `json:"phid"`
+}
+
+type SearchAttachmentWatchers struct {
+	Watchers []AttachmentWatcher `json:"watchers"`
+}
+
+type AttachmentWatcher struct {
+	PHID string `json:"phid"`
+}
+
+type SearchAttachmentAncestors struct {
+	Ancestors []ProjectParent `json:"ancestors"`
+}
